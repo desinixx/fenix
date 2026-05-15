@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | FENIX</title>
+    <meta name="description" content="Start your project with FENIX Studio.">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #000000; --accent-gold: #f2d95c; --accent-blue: #41a8e8; --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.7); --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08); --transition: all 0.4s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--primary); color: var(--text-main); overflow-x: hidden; cursor: none; }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+        
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent-gold); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--accent-gold); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+
+        .loader { position: fixed; inset: 0; background: var(--primary); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease; }
+        .loader img { width: 150px; animation: pulse 2s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
+
+        nav { position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
+        .logo img { height: 40px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--accent-gold); transition: var(--transition); }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .btn-nav { padding: 10px 24px; background: linear-gradient(45deg, var(--accent-blue), var(--accent-gold)); border: none; border-radius: 30px; color: var(--primary); font-weight: 600; }
+        .menu-toggle { display: none; font-size: 24px; }
+
+        .page-header { padding: 150px 5% 80px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(242,217,92,0.1) 0%, transparent 70%); }
+        .page-header h1 { font-size: 4rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(45deg, #fff, var(--accent-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .contact-container { max-width: 1200px; margin: 0 auto; padding: 50px 5% 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .contact-info h2 { font-size: 2.5rem; margin-bottom: 20px; color: var(--accent-blue); }
+        .contact-info p { color: var(--text-muted); margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; }
+        .info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; transition: var(--transition); }
+        .info-card:hover { border-color: var(--accent-gold); transform: translateX(10px); }
+        .info-card i { font-size: 2rem; color: var(--accent-gold); }
+        .info-card div h4 { font-size: 1.2rem; margin-bottom: 5px; }
+        .info-card div p { color: var(--text-muted); margin: 0; font-size: 1rem; }
+
+        .contact-form { background: var(--glass-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--glass-border); position: relative; overflow: hidden; backdrop-filter: blur(10px); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 10px; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 1px; }
+        .form-control { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; padding: 15px; border-radius: 10px; font-size: 1rem; transition: var(--transition); outline: none; }
+        .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 15px rgba(65,168,232,0.2); }
+        textarea.form-control { height: 150px; resize: none; }
+        select.form-control { cursor: none; appearance: none; }
+        .btn-submit { width: 100%; padding: 16px; border: none; border-radius: 30px; background: linear-gradient(45deg, var(--accent-blue), var(--accent-gold)); color: #000; font-size: 1.1rem; font-weight: 600; cursor: none; transition: var(--transition); }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(65,168,232,0.3); }
+
+          /* Footer */
+        footer {
+            background: #050505; border-top: 1px solid var(--glass-border); padding: 80px 5% 40px;
+        }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 50px; margin-bottom: 60px; }
+        .footer-about p { color: var(--text-muted); margin-top: 20px; max-width: 300px; line-height: 1.6; }
+        .footer-links h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-gold); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: var(--transition); }
+        .footer-links a:hover { color: var(--accent-blue); padding-left: 5px; }
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons a {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--glass-bg); display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-size: 1.2rem; transition: var(--transition); text-decoration: none; border: 1px solid var(--glass-border);
+        }
+        .social-icons a:hover { background: var(--accent-blue); border-color: var(--accent-blue); transform: translateY(-3px); }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Form Loading Overlay */
+        .form-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px; }
+        .form-spinner { width: 50px; height: 50px; border: 3px solid var(--glass-border); border-top-color: var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        .form-overlay p { margin-top: 15px; color: var(--accent-gold); font-weight: 600; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Popup Notification */
+        .popup { position: fixed; top: 100px; right: -400px; background: #111; border-left: 4px solid #25D366; padding: 20px 30px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; display: flex; align-items: center; gap: 15px; }
+        .popup.show { right: 20px; }
+        .popup.error { border-left-color: #ff4757; }
+        .popup i { font-size: 24px; color: #25D366; }
+        .popup.error i { color: #ff4757; }
+
+        @media (max-width: 991px) { .contact-container { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .nav-links { position: fixed; top: 80px; left: -100%; width: 100%; height: calc(100vh - 80px); background: var(--primary); flex-direction: column; align-items: center; justify-content: center; transition: var(--transition); }
+            .nav-links.active { left: 0; } .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <div class="loader"><img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/150x50/000/fff?text=FENIX'"></div>
+
+    <!-- Popup -->
+    <div class="popup" id="popup">
+        <i class="ph-fill ph-check-circle" id="popup-icon"></i>
+        <div>
+            <h4 id="popup-title">Success!</h4>
+            <p id="popup-msg" style="color:var(--text-muted); font-size:0.9rem;">Your order has been sent.</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html" class="logo"><img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'"></a>
+        <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html" class="active">Contact</a>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <h1 class="gsap-hero">Let's Create Together</h1>
+        <p class="gsap-hero">Ready to elevate your brand? Fill out the form and we will get back to you within 24 hours.</p>
+    </header>
+
+    <div class="contact-container">
+        <div class="contact-info gsap-up">
+            <h2>Get In Touch</h2>
+            <p>Whether you need a cutting-edge futuristic poster design, a complete brand identity overhaul, or high-fidelity large format printing, our team is ready to bring your vision to reality.</p>
+            
+            <div class="info-card">
+                <i class="ph ph-envelope-simple"></i>
+                <div><h4>Email Us</h4><p>falaq77777@gmail.com</p></div>
+            </div>
+            <div class="info-card">
+                <i class="ph ph-phone"></i>
+                <div><h4>Call Us</h4><p>+91 9999999999</p></div>
+            </div>
+            <div class="info-card">
+                <i class="ph ph-map-pin"></i>
+                <div><h4>Studio</h4><p>Nadapuram, Calicut, Kerala</p></div>
+            </div>
+        </div>
+
+        <div class="contact-form gsap-up">
+            <div class="form-overlay" id="formOverlay">
+                <div class="form-spinner"></div>
+                <p>Sending Request...</p>
+            </div>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>FULL NAME</label>
+                    <input type="text" class="form-control" name="name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>EMAIL ADDRESS</label>
+                    <input type="email" class="form-control" name="email" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label>PHONE NUMBER</label>
+                    <input type="tel" class="form-control" name="phone" required placeholder="+1 234 567 8900">
+                </div>
+                <div class="form-group">
+                    <label>SERVICE REQUIRED</label>
+                    <select class="form-control" name="service" required>
+                        <option value="" disabled selected>Select a Service...</option>
+                        <option value="Poster Design">Poster Design</option>
+                        <option value="Premium Printing">Premium Printing</option>
+                        <option value="Brand Identity">Brand Identity</option>
+                        <option value="Custom Project">Custom Project</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>PROJECT DETAILS</label>
+                    <textarea class="form-control" name="message" required placeholder="Tell us about your futuristic vision..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Send Order <i class="ph ph-paper-plane-right"></i></button>
+            </form>
+        </div>
+    </div>
+        <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="logo.png" alt="FENIX" height="40" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'">
+                    <p>FENIX is a high-end design and printing agency dedicated to crafting visually stunning, futuristic, and premium brand materials.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="mailto:falaq77777@gmail.com"><i class="ph ph-envelope-simple"></i></a>
+                        <a href="tel:+919999999999"><i class="ph ph-phone-call"></i></a>
+                        <!--a href="#"><i class="ph ph-email-logo"></i></a>
+                        <a href="#"><i class="ph ph-behance-logo"></i></a>
+                        <a href="#"><i class="ph ph-dribbble-logo"></i></a-->
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="privacy.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li style="color:var(--text-muted);"><i class="ph ph-envelope-simple"></i> falaq77777@gmail.com</li>
+                        <li style="color:var(--text-muted);"><i class="ph ph-phone"></i> +91 999999999</li>
+                        <li style="color:var(--text-muted);"><i class="ph ph-map-pin"></i> Nadapuram Calicut Kerala </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; <span id="year"></span> FENIX Studio. All Rights Reserved. Built with futuristic vision.
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        // Replace with your actual Apps Script Web App URL after deployment
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynakvEX4IDeuUW8B1LBZsCYp82GsKjAg8N6EFvKC-ClUmS__SzEI0Aq07P0r6sQxYG/exec";
+
+        window.addEventListener('load', () => { setTimeout(() => { document.querySelector('.loader').style.display = 'none'; gsap.to('.gsap-hero', { y: 0, opacity: 1, duration: 1, stagger: 0.2 }); gsap.to('.gsap-up', { y: 0, opacity: 1, duration: 1, stagger: 0.2, delay: 0.5 }); }, 800); });
+        document.querySelector('.menu-toggle').addEventListener('click', () => { document.querySelector('.nav-links').classList.toggle('active'); });
+
+        const cursorDot = document.querySelector('.cursor-dot'); const cursorOutline = document.querySelector('.cursor-outline');
+        window.addEventListener('mousemove', (e) => { cursorDot.style.left = `${e.clientX}px`; cursorDot.style.top = `${e.clientY}px`; cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" }); });
+
+        // Form Submission Logic
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_WEBAPP_URL") {
+                showPopup("Setup Required", "Please update the APPS_SCRIPT_URL in the code.", "error");
+                return;
+            }
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            data.action = "submit"; // Important for backend routing
+
+            const overlay = document.getElementById('formOverlay');
+            overlay.style.display = 'flex';
+
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showPopup("Success!", "Your order has been submitted successfully.", "success");
+                    form.reset();
+                } else {
+                    showPopup("Error", result.error || "Something went wrong.", "error");
+                }
+            } catch (error) {
+                showPopup("Network Error", "Failed to connect to the server.", "error");
+            } finally {
+                overlay.style.display = 'none';
+            }
+        });
+
+        function showPopup(title, msg, type) {
+            const popup = document.getElementById('popup');
+            const titleEl = document.getElementById('popup-title');
+            const msgEl = document.getElementById('popup-msg');
+            const icon = document.getElementById('popup-icon');
+
+            titleEl.textContent = title;
+            msgEl.textContent = msg;
+
+            if(type === 'error') {
+                popup.classList.add('error');
+                icon.className = 'ph-fill ph-x-circle';
+            } else {
+                popup.classList.remove('error');
+                icon.className = 'ph-fill ph-check-circle';
+            }
+
+            popup.classList.add('show');
+            setTimeout(() => { popup.classList.remove('show'); }, 5000);
+        }
+    </script>
+</body>
+</html>

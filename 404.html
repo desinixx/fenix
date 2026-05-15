@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found | FENIX</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #000000; --accent-gold: #f2d95c; --accent-blue: #41a8e8; --text-main: #ffffff;
+            --transition: all 0.4s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--primary); color: var(--text-main); height: 100vh; overflow: hidden; cursor: none; display: flex; justify-content: center; align-items: center; text-align: center; }
+        
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent-gold); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--accent-gold); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+
+        #particles-js { position: absolute; inset: 0; z-index: 1; }
+        
+        .error-container { position: relative; z-index: 2; }
+        .glitch-wrapper { position: relative; display: inline-block; }
+        h1 { font-size: 10rem; font-weight: 800; line-height: 1; margin-bottom: 20px; color: var(--text-main); position: relative; text-shadow: 0 0 20px rgba(65,168,232,0.5); }
+        .glitch { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
+        .glitch-1 { color: #ff00c1; z-index: -1; animation: glitch-anim 2.5s infinite linear alternate-reverse; }
+        .glitch-2 { color: var(--accent-blue); z-index: -2; animation: glitch-anim 3s infinite linear alternate-reverse; }
+        
+        p { font-size: 1.5rem; color: rgba(255,255,255,0.7); margin-bottom: 40px; letter-spacing: 2px; }
+        
+        .btn-home { display: inline-flex; align-items: center; gap: 10px; padding: 15px 40px; background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); border-radius: 30px; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); cursor: none; }
+        .btn-home:hover { background: var(--accent-gold); color: #000; box-shadow: 0 0 20px rgba(242, 217, 92, 0.4); }
+
+
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons a {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--glass-bg); display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-size: 1.2rem; transition: var(--transition); text-decoration: none; border: 1px solid var(--glass-border);
+        }
+        .social-icons a:hover { background: var(--accent-blue); border-color: var(--accent-blue); transform: translateY(-3px); }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.9rem; }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -2px); }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 6rem; }
+            p { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <div id="particles-js"></div>
+
+    <div class="error-container">
+        <div class="glitch-wrapper">
+            <h1>404</h1>
+            <h1 class="glitch glitch-1">404</h1>
+            <h1 class="glitch glitch-2">404</h1>
+        </div>
+        <p>SYSTEM LOST: PAGE NOT FOUND</p>
+        <a href="index.html" class="btn-home"><i class="ph ph-arrow-left"></i> Return to Base</a>
+    </div>
+
+        <!-- Footer -->
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        const cursorDot = document.querySelector('.cursor-dot'); const cursorOutline = document.querySelector('.cursor-outline');
+        window.addEventListener('mousemove', (e) => { cursorDot.style.left = `${e.clientX}px`; cursorDot.style.top = `${e.clientY}px`; cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" }); });
+        document.querySelector('.btn-home').addEventListener('mouseenter', () => { cursorOutline.style.width = '60px'; cursorOutline.style.height = '60px'; cursorOutline.style.backgroundColor = 'rgba(242, 217, 92, 0.1)'; });
+        document.querySelector('.btn-home').addEventListener('mouseleave', () => { cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px'; cursorOutline.style.backgroundColor = 'transparent'; });
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#41a8e8", "#f2d95c", "#ff00c1"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.6, "random": true },
+                "size": { "value": 2, "random": true },
+                "line_linked": { "enable": false },
+                "move": { "enable": true, "speed": 1, "direction": "top", "random": true, "out_mode": "out" }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FENIX | Premium Poster & Printing Design Studio</title>
+    <meta name="description" content="Creative Branding, Printing & Poster Solutions. High-end agency for modern businesses.">
+    <link rel="icon" href="favicon.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        :root {
+            --primary: #000000;
+            --accent-gold: #f2d95c;
+            --accent-blue: #41a8e8;
+            --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.7);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--accent-gold);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid var(--accent-gold);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Page Loader */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--primary);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease;
+        }
+        .loader img {
+            width: 150px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        .loader-line {
+            width: 200px; height: 2px;
+            background: var(--glass-border);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .loader-line::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-gold), transparent);
+            animation: loadLine 1.5s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
+        @keyframes loadLine { 100% { left: 100%; } }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .logo img { height: 40px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px;
+            background: var(--accent-gold); transition: var(--transition);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover { color: var(--accent-gold); }
+        .btn-nav {
+            padding: 10px 24px;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-gold));
+            border: none; border-radius: 30px;
+            color: var(--primary); font-weight: 600; cursor: none;
+            transition: var(--transition);
+        }
+        .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(65,168,232,0.3); }
+
+        /* Mobile Menu */
+        .menu-toggle { display: none; cursor: none; font-size: 24px; }
+        
+        /* Layout Utilities */
+        section { padding: 100px 5%; position: relative; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(to right, var(--text-main), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(65,168,232,0.2) 0%, rgba(0,0,0,0) 70%);
+            z-index: 0; pointer-events: none;
+        }
+        #particles-js { position: absolute; inset: 0; z-index: 1; }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; }
+        .hero h1 {
+            font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, var(--accent-gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0; transform: translateY(30px);
+        }
+        .hero p {
+            font-size: 1.5rem; color: var(--text-muted); margin-bottom: 40px; font-weight: 300;
+            opacity: 0; transform: translateY(30px);
+        }
+        .hero-btns { display: flex; gap: 20px; justify-content: center; opacity: 0; transform: translateY(30px); }
+        .btn-primary {
+            padding: 16px 36px; border-radius: 40px;
+            background: var(--text-main); color: var(--primary);
+            text-decoration: none; font-weight: 600; font-size: 1.1rem;
+            transition: var(--transition); cursor: none;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-primary:hover {
+            background: var(--accent-gold); box-shadow: 0 0 20px rgba(242, 217, 92, 0.4);
+        }
+        .btn-secondary {
+            padding: 16px 36px; border-radius: 40px;
+            background: transparent; color: var(--text-main);
+            text-decoration: none; font-weight: 600; font-size: 1.1rem;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition); cursor: none;
+            backdrop-filter: blur(5px);
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent-blue); background: rgba(65, 168, 232, 0.1);
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+        }
+        .service-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 40px 30px;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            position: relative; overflow: hidden;
+        }
+        .service-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue)); transition: 0.5s;
+        }
+        .service-card:hover::before { left: 0; }
+        .service-card:hover { transform: translateY(-10px); border-color: rgba(65,168,232,0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .service-icon { font-size: 3rem; color: var(--accent-gold); margin-bottom: 20px; }
+        .service-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .service-card p { color: var(--text-muted); line-height: 1.6; }
+
+        /* Featured Designs (Marquee) */
+        .marquee-section { padding: 50px 0; overflow: hidden; background: rgba(255,255,255,0.02); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);}
+        .marquee-container { display: flex; width: max-content; animation: marquee 20s linear infinite; }
+        .marquee-item { font-size: 4rem; font-weight: 800; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.2); margin: 0 40px; text-transform: uppercase; white-space: nowrap;}
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Portfolio Preview */
+        .portfolio-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;
+        }
+        .portfolio-item {
+            border-radius: 20px; overflow: hidden; position: relative; aspect-ratio: 4/5;
+            background: var(--glass-bg);
+        }
+        .portfolio-item img {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s;
+            filter: grayscale(80%) contrast(120%);
+        }
+        .portfolio-overlay {
+            position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;
+            opacity: 0; transition: var(--transition);
+        }
+        .portfolio-item:hover img { transform: scale(1.05); filter: grayscale(0%) contrast(100%); }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+        .portfolio-overlay h4 { font-size: 1.5rem; color: var(--accent-gold); margin-bottom: 10px; transform: translateY(20px); transition: 0.4s; }
+        .portfolio-overlay p { color: var(--text-main); transform: translateY(20px); transition: 0.5s; }
+        .portfolio-item:hover h4, .portfolio-item:hover p { transform: translateY(0); }
+
+        /* Pricing */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .price-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 50px 30px; text-align: center;
+            transition: var(--transition);
+        }
+        .price-card.featured {
+            border-color: var(--accent-gold);
+            background: linear-gradient(180deg, rgba(242,217,92,0.05) 0%, rgba(0,0,0,0) 100%);
+            transform: scale(1.05);
+        }
+        .price-card h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .price { font-size: 3.5rem; font-weight: 800; margin-bottom: 30px; color: var(--accent-blue); }
+        .price span { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+        .price-features { list-style: none; margin-bottom: 40px; text-align: left; }
+        .price-features li { margin-bottom: 15px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+        .price-features li i { color: var(--accent-gold); }
+        .price-card:hover { border-color: var(--accent-blue); }
+
+        /* Footer */
+        footer {
+            background: #050505; border-top: 1px solid var(--glass-border); padding: 80px 5% 40px;
+        }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 50px; margin-bottom: 60px; }
+        .footer-about p { color: var(--text-muted); margin-top: 20px; max-width: 300px; line-height: 1.6; }
+        .footer-links h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-gold); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: var(--transition); }
+        .footer-links a:hover { color: var(--accent-blue); padding-left: 5px; }
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons a {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--glass-bg); display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-size: 1.2rem; transition: var(--transition); text-decoration: none; border: 1px solid var(--glass-border);
+        }
+        .social-icons a:hover { background: var(--accent-blue); border-color: var(--accent-blue); transform: translateY(-3px); }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Floating WhatsApp */
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 60px; height: 60px; background: #25D366; color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+            z-index: 100; transition: var(--transition); animation: bounce 2s infinite;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Scroll Progress */
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+            z-index: 1001; pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .hero h1 { font-size: 3.5rem; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .price-card.featured { transform: none; }
+        }
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: fixed; top: 80px; left: -100%; width: 100%; height: calc(100vh - 80px);
+                background: var(--primary); flex-direction: column; align-items: center; justify-content: center;
+                transition: var(--transition);
+            }
+            .nav-links.active { left: 0; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero-btns { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .footer-about p { margin: 20px auto; }
+            .social-icons { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader">
+        <img src="logo.png" alt="FENIX Logo" onerror="this.src='https://placehold.co/150x50/000/fff?text=FENIX'">
+        <div class="loader-line"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'">
+        </a>
+        <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+            <!--a href="admin.html" class="btn-nav">Admin Login</a-->
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div id="particles-js"></div>
+        <div class="hero-bg-glow"></div>
+        <div class="hero-content">
+            <h1 class="gsap-hero">Premium Poster & Printing Design Studio</h1>
+            <p class="gsap-hero">Creative Branding, Printing & Poster Solutions engineered for modern, visionary brands.</p>
+            <div class="hero-btns gsap-hero">
+                <a href="contact.html" class="btn-primary">Start Project <i class="ph ph-arrow-right"></i></a>
+                <a href="#portfolio" class="btn-secondary">View Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-section">
+        <div class="marquee-container">
+            <div class="marquee-item">CREATIVE DESIGN • HIGH-END PRINTING • BRANDING IDENTITY • POSTER EXCELLENCE • </div>
+            <div class="marquee-item">CREATIVE DESIGN • HIGH-END PRINTING • BRANDING IDENTITY • POSTER EXCELLENCE • </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <div class="section-header gsap-fade">
+                <h2>Our Premium Services</h2>
+                <p>We transform ideas into tangible, breathtaking visual experiences.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card gsap-up">
+                    <i class="ph ph-paint-brush service-icon"></i>
+                    <h3>Poster Design</h3>
+                    <p>Futuristic, minimalist, and highly engaging poster concepts tailored for marketing campaigns, events, and brand storytelling.</p>
+                </div>
+                <div class="service-card gsap-up">
+                    <i class="ph ph-printer service-icon"></i>
+                    <h3>Premium Printing</h3>
+                    <p>High-fidelity, large-format printing on fine art papers, metallic finishes, and durable canvas with unparalleled color accuracy.</p>
+                </div>
+                <div class="service-card gsap-up">
+                    <i class="ph ph-bezier-curve service-icon"></i>
+                    <h3>Brand Identity</h3>
+                    <p>Comprehensive visual identity design including logos, color palettes, typography, and cohesive brand guidelines.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" style="background: rgba(255,255,255,0.01);">
+        <div class="container">
+            <div class="section-header gsap-fade">
+                <h2>Featured Designs</h2>
+                <p>A glimpse into our world of cinematic and futuristic poster artistry.</p>
+            </div>
+            <div class="portfolio-grid">
+                <!-- Using placeholder images to represent premium dark posters -->
+                <div class="portfolio-item gsap-up">
+                    <img src="https://images.unsplash.com/photo-1536152470836-b943b246224c?auto=format&fit=crop&w=600&q=80" alt="Poster 1">
+                    <div class="portfolio-overlay">
+                        <h4>Cyber Neon Event</h4>
+                        <p>Event Poster Design</p>
+                    </div>
+                </div>
+                <div class="portfolio-item gsap-up">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Poster 2">
+                    <div class="portfolio-overlay">
+                        <h4>Abstract Geometry</h4>
+                        <p>Art Print Series</p>
+                    </div>
+                </div>
+                <div class="portfolio-item gsap-up">
+                    <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&w=600&q=80" alt="Poster 3">
+                    <div class="portfolio-overlay">
+                        <h4>Minimalist Brand</h4>
+                        <p>Corporate Identity</p>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 50px;" class="gsap-fade">
+                <a href="about.html" class="btn-secondary">Learn About Our Process</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <div class="container">
+            <div class="section-header gsap-fade">
+                <h2>Printing Solutions & Pricing</h2>
+                <p>Transparent pricing for premium quality results.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="price-card gsap-up">
+                    <h3>Standard Print</h3>
+                    <div class="price">₹49<span>/batch</span></div>
+                    <ul class="price-features">
+                        <li><i class="ph-fill ph-check-circle"></i> High-Quality Matte Finish</li>
+                        <li><i class="ph-fill ph-check-circle"></i> Standard A3/A4 Sizes</li>
+                        <li><i class="ph-fill ph-check-circle"></i> 3-Day Turnaround</li>
+                        <li><i class="ph-fill ph-x-circle" style="color:var(--text-muted)"></i> No Design Included</li>
+                    </ul>
+                    <a href="contact.html" class="btn-secondary" style="width: 100%; display: block; text-align: center;">Choose Plan</a>
+                </div>
+                <div class="price-card featured gsap-up">
+                    <div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); background:var(--accent-gold); color:#000; padding:5px 15px; border-radius:20px; font-weight:bold; font-size:0.8rem;">POPULAR</div>
+                    <h3>Premium Design + Print</h3>
+                    <div class="price">₹199<span>/project</span></div>
+                    <ul class="price-features">
+                        <li><i class="ph-fill ph-check-circle"></i> Custom Poster Design</li>
+                        <li><i class="ph-fill ph-check-circle"></i> Premium Gloss/Metallic Print</li>
+                        <li><i class="ph-fill ph-check-circle"></i> Up to A1 Size</li>
+                        <li><i class="ph-fill ph-check-circle"></i> 2 Design Revisions</li>
+                    </ul>
+                    <a href="contact.html" class="btn-primary" style="width: 100%; display: block; text-align: center; border-radius:30px;">Start Project</a>
+                </div>
+                <div class="price-card gsap-up">
+                    <h3>Agency Retainer</h3>
+                    <div class="price">₹899<span>/mo</span></div>
+                    <ul class="price-features">
+                        <li><i class="ph-fill ph-check-circle"></i> Unlimited Designs</li>
+                        <li><i class="ph-fill ph-check-circle"></i> Priority Print Queue</li>
+                        <li><i class="ph-fill ph-check-circle"></i> Custom Brand Identity</li>
+                        <li><i class="ph-fill ph-check-circle"></i> Dedicated Manager</li>
+                    </ul>
+                    <a href="contact.html" class="btn-secondary" style="width: 100%; display: block; text-align: center;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="logo.png" alt="FENIX" height="40" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'">
+                    <p>FENIX is a high-end design and printing agency dedicated to crafting visually stunning, futuristic, and premium brand materials.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="mailto:falaq77777@gmail.com"><i class="ph ph-envelope-simple"></i></a>
+                        <a href="tel:+919999999999"><i class="ph ph-phone-call"></i></a>
+                        <!--a href="#"><i class="ph ph-email-logo"></i></a>
+                        <a href="#"><i class="ph ph-behance-logo"></i></a>
+                        <a href="#"><i class="ph ph-dribbble-logo"></i></a-->
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="privacy.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li style="color:var(--text-muted);"><i class="ph ph-envelope-simple"></i> falaq77777@gmail.com</li>
+                        <li style="color:var(--text-muted);"><i class="ph ph-phone"></i> +91 999999999</li>
+                        <li style="color:var(--text-muted);"><i class="ph ph-map-pin"></i> Nadapuram Calicut Kerala </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; <span id="year"></span> FENIX Studio. All Rights Reserved. Built with futuristic vision.
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/99999999999" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="ph ph-whatsapp-logo"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Set Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.querySelector('.loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    initAnimations();
+                }, 800);
+            }, 1000);
+        });
+
+        // Mobile Menu
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            // Subtle delay for outline
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Add hover effect to links and buttons
+        const interactables = document.querySelectorAll('a, button, .service-card');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.width = '60px';
+                cursorOutline.style.height = '60px';
+                cursorOutline.style.backgroundColor = 'rgba(242, 217, 92, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.width = '40px';
+                cursorOutline.style.height = '40px';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + '%';
+            
+            // Navbar blur effect
+            const nav = document.querySelector('nav');
+            if (winScroll > 50) {
+                nav.style.background = 'rgba(0, 0, 0, 0.8)';
+                nav.style.padding = '15px 5%';
+            } else {
+                nav.style.background = 'rgba(0, 0, 0, 0.5)';
+                nav.style.padding = '20px 5%';
+            }
+        });
+
+        // Particles.js Configuration
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#41a8e8", "#f2d95c", "#ffffff"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": true, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
+                "modes": { "grab": { "distance": 200, "line_linked": { "opacity": 0.3 } } }
+            },
+            "retina_detect": true
+        });
+
+        // GSAP Animations
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero entrance
+            gsap.to('.gsap-hero', {
+                y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out"
+            });
+
+            // Scroll triggers for sections
+            const fadeElements = document.querySelectorAll('.gsap-fade');
+            fadeElements.forEach((el) => {
+                gsap.fromTo(el, 
+                    { opacity: 0 },
+                    { 
+                        opacity: 1, duration: 1,
+                        scrollTrigger: { trigger: el, start: "top 85%" }
+                    }
+                );
+            });
+
+            const upElements = document.querySelectorAll('.gsap-up');
+            upElements.forEach((el) => {
+                gsap.fromTo(el, 
+                    { y: 50, opacity: 0 },
+                    { 
+                        y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+                        scrollTrigger: { trigger: el, start: "top 85%" }
+                    }
+                );
+            });
+        }
+    </script>
+</body>
+</html>

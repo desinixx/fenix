@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | FENIX</title>
+    <meta name="description" content="Discover the story and creative process behind FENIX.">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Shared Styles (Copied from index.html for consistency as external CSS is disallowed) */
+        :root {
+            --primary: #000000;
+            --accent-gold: #f2d95c;
+            --accent-blue: #41a8e8;
+            --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.7);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--primary); color: var(--text-main); overflow-x: hidden; cursor: none; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+        
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent-gold); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--accent-gold); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+
+        /* Loader */
+        .loader { position: fixed; inset: 0; background: var(--primary); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.8s ease; }
+        .loader img { width: 150px; animation: pulse 2s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
+
+        /* Navbar */
+        nav { position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); transition: var(--transition); }
+        .logo img { height: 40px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--accent-gold); transition: var(--transition); }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover { color: var(--accent-gold); }
+        .btn-nav { padding: 10px 24px; background: linear-gradient(45deg, var(--accent-blue), var(--accent-gold)); border: none; border-radius: 30px; color: var(--primary); font-weight: 600; cursor: none; transition: var(--transition); }
+        .menu-toggle { display: none; cursor: none; font-size: 24px; }
+        
+        /* Inner Page Header */
+        .page-header { padding: 150px 5% 80px; text-align: center; background: radial-gradient(circle at 50% 150%, rgba(65,168,232,0.1) 0%, transparent 70%); border-bottom: 1px solid var(--glass-border); }
+        .page-header h1 { font-size: 4rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(45deg, #fff, var(--accent-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-header p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+        section { padding: 100px 5%; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 3rem; margin-bottom: 15px; }
+
+        /* Story Section */
+        .story-section { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .story-content h2 { font-size: 2.5rem; margin-bottom: 20px; color: var(--accent-blue); }
+        .story-content p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; font-size: 1.1rem; }
+        .story-img { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); aspect-ratio: 4/3; }
+        .story-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%); transition: var(--transition); }
+        .story-img:hover img { filter: grayscale(0); transform: scale(1.05); }
+
+        /* Counters */
+        .counters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 50px; margin-top: 50px; backdrop-filter: blur(10px); }
+        .counter-item { text-align: center; }
+        .counter-num { font-size: 3.5rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 10px; }
+        .counter-label { color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        /* Team */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .team-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px; text-align: center; transition: var(--transition); }
+        .team-card:hover { transform: translateY(-10px); border-color: var(--accent-blue); }
+        .team-img { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; border: 2px solid var(--accent-gold); overflow: hidden; }
+        .team-img img { width: 100%; height: 100%; object-fit: cover; }
+        .team-card h3 { font-size: 1.3rem; margin-bottom: 5px; }
+        .team-card p { color: var(--accent-blue); font-size: 0.9rem; margin-bottom: 15px; }
+        .team-social a { color: var(--text-muted); margin: 0 5px; transition: var(--transition); }
+        .team-social a:hover { color: var(--text-main); }
+
+        /* Timeline */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; padding: 40px 0; }
+        .timeline::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: var(--glass-border); }
+        .timeline-item { margin-bottom: 50px; position: relative; width: 50%; padding: 0 40px; }
+        .timeline-item:nth-child(odd) { left: 0; text-align: right; }
+        .timeline-item:nth-child(even) { left: 50%; }
+        .timeline-dot { position: absolute; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-blue); border: 4px solid var(--primary); }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -10px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -10px; }
+        .timeline-content { background: var(--glass-bg); padding: 30px; border-radius: 20px; border: 1px solid var(--glass-border); }
+        .timeline-year { font-size: 1.5rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 10px; }
+
+       /* Footer */
+        footer {
+            background: #050505; border-top: 1px solid var(--glass-border); padding: 80px 5% 40px;
+        }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 50px; margin-bottom: 60px; }
+        .footer-about p { color: var(--text-muted); margin-top: 20px; max-width: 300px; line-height: 1.6; }
+        .footer-links h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-gold); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: var(--transition); }
+        .footer-links a:hover { color: var(--accent-blue); padding-left: 5px; }
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons a {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--glass-bg); display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-size: 1.2rem; transition: var(--transition); text-decoration: none; border: 1px solid var(--glass-border);
+        }
+        .social-icons a:hover { background: var(--accent-blue); border-color: var(--accent-blue); transform: translateY(-3px); }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.9rem; }
+
+
+        @media (max-width: 768px) {
+            .story-section { grid-template-columns: 1fr; }
+            .counters { grid-template-columns: 1fr 1fr; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 60px; padding-right: 0; text-align: left !important; left: 0 !important; }
+            .timeline-dot { left: 10px !important; }
+            .nav-links { position: fixed; top: 80px; left: -100%; width: 100%; height: calc(100vh - 80px); background: var(--primary); flex-direction: column; align-items: center; justify-content: center; transition: var(--transition); }
+            .nav-links.active { left: 0; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div class="loader">
+        <img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/150x50/000/fff?text=FENIX'">
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'">
+        </a>
+        <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header">
+        <h1 class="gsap-hero">The FENIX Story</h1>
+        <p class="gsap-hero">Forging the future of design and printing through relentless innovation.</p>
+    </header>
+
+    <!-- Story -->
+    <section>
+        <div class="container story-section">
+            <div class="story-content gsap-fade">
+                <h2>Our Vision</h2>
+                <p>Born from a desire to elevate brand aesthetics, FENIX was established to bridge the gap between digital creativity and high-end physical prints.</p>
+                <p>We believe that a poster is not just paper and ink—it's an emotional anchor, a statement piece, and the voice of your brand. We combine state-of-the-art printing technology with futuristic design philosophies.</p>
+            </div>
+            <div class="story-img gsap-up">
+                <img src="https://images.unsplash.com/photo-1542744094-24638ea0b3b5?auto=format&fit=crop&w=800&q=80" alt="Studio">
+            </div>
+        </div>
+
+        <div class="container counters">
+            <div class="counter-item">
+                <div class="counter-num" data-target="500">0</div>
+                <div class="counter-label">Projects Delivered</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-num" data-target="98">0</div>
+                <div class="counter-label">Client Satisfaction (%)</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-num" data-target="15">0</div>
+                <div class="counter-label">Design Awards</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-num" data-target="5">0</div>
+                <div class="counter-label">Years Experience</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section style="background: rgba(255,255,255,0.01);">
+        <div class="container">
+            <div class="section-header gsap-fade">
+                <h2>Our Journey</h2>
+                <p>The evolution of FENIX Studio.</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item gsap-up">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2019</div>
+                        <h3>The Genesis</h3>
+                        <p style="color:var(--text-muted); margin-top:10px;">Founded as a small indie design studio focusing on digital art.</p>
+                    </div>
+                </div>
+                <div class="timeline-item gsap-up">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2021</div>
+                        <h3>Print Integration</h3>
+                        <p style="color:var(--text-muted); margin-top:10px;">Acquired state-of-the-art large format printers to offer complete solutions.</p>
+                    </div>
+                </div>
+                <div class="timeline-item gsap-up">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024</div>
+                        <h3>Global Reach</h3>
+                        <p style="color:var(--text-muted); margin-top:10px;">Expanded services internationally, catering to enterprise brands.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section>
+        <div class="container">
+            <div class="section-header gsap-fade">
+                <h2>Creative Minds</h2>
+                <p>The visionaries behind our premium designs.</p>
+            </div>
+            <div class="team-grid">
+                  
+                </div>
+                <div class="team-card gsap-up">
+                    <div class="team-img"><img src="" alt="falaq"></div>
+                    <h3>Falaq Shan Abdulla</h3>
+                    <p>Director</p>
+                    <div class="team-social">
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                    </div>
+                </div>
+             
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="logo.png" alt="FENIX" height="40" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'">
+                    <p>FENIX is a high-end design and printing agency dedicated to crafting visually stunning, futuristic, and premium brand materials.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="mailto:falaq77777@gmail.com"><i class="ph ph-envelope-simple"></i></a>
+                        <a href="tel:+919999999999"><i class="ph ph-phone-call"></i></a>
+                        <!--a href="#"><i class="ph ph-email-logo"></i></a>
+                        <a href="#"><i class="ph ph-behance-logo"></i></a>
+                        <a href="#"><i class="ph ph-dribbble-logo"></i></a-->
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="privacy.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li style="color:var(--text-muted);"><i class="ph ph-envelope-simple"></i> falaq77777@gmail.com</li>
+                        <li style="color:var(--text-muted);"><i class="ph ph-phone"></i> +91 999999999</li>
+                        <li style="color:var(--text-muted);"><i class="ph ph-map-pin"></i> Nadapuram Calicut Kerala </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; <span id="year"></span> FENIX Studio. All Rights Reserved. Built with futuristic vision.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        // Loader & Menu
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.querySelector('.loader').style.display = 'none'; initAnimations(); }, 800);
+        });
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`; cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
+
+        // Animations
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.to('.gsap-hero', { y: 0, opacity: 1, duration: 1, stagger: 0.2 });
+            document.querySelectorAll('.gsap-fade').forEach(el => gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 1, scrollTrigger: { trigger: el, start: "top 85%" }}));
+            document.querySelectorAll('.gsap-up').forEach(el => gsap.fromTo(el, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, scrollTrigger: { trigger: el, start: "top 85%" }}));
+            
+            // Counters
+            const counters = document.querySelectorAll('.counter-num');
+            ScrollTrigger.create({
+                trigger: '.counters',
+                start: "top 80%",
+                onEnter: () => {
+                    counters.forEach(counter => {
+                        const target = +counter.getAttribute('data-target');
+                        gsap.to(counter, {
+                            innerHTML: target, duration: 2, snap: { innerHTML: 1 },
+                            onUpdate: function() { counter.innerHTML = Math.round(this.targets()[0].innerHTML); }
+                        });
+                    });
+                },
+                once: true
+            });
+        }
+    </script>
+</body>
+</html>

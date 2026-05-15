@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | FENIX</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #000000; --accent-gold: #f2d95c; --accent-blue: #41a8e8; --text-main: #ffffff;
+            --text-muted: rgba(255,255,255,0.7); --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08); --transition: all 0.4s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--primary); color: var(--text-main); overflow-x: hidden; cursor: none; }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+        
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent-gold); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--accent-gold); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+
+        nav { position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
+        .logo img { height: 40px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--accent-gold); transition: var(--transition); }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .menu-toggle { display: none; font-size: 24px; cursor: none; }
+
+        .page-header { padding: 150px 5% 80px; text-align: center; border-bottom: 1px solid var(--glass-border); }
+        .page-header h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; color: var(--accent-blue); }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 5% 100px; }
+        .content-box { background: var(--glass-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--glass-border); }
+        .content-box h2 { font-size: 1.8rem; margin: 40px 0 20px; color: var(--accent-gold); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+        .content-box h2:first-child { margin-top: 0; }
+        .content-box p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; font-size: 1.05rem; }
+        .content-box ul { margin-left: 20px; color: var(--text-muted); margin-bottom: 20px; }
+        .content-box li { margin-bottom: 10px; line-height: 1.6; }
+
+        footer { background: #050505; border-top: 1px solid var(--glass-border); padding: 40px 5%; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { position: fixed; top: 80px; left: -100%; width: 100%; height: calc(100vh - 80px); background: var(--primary); flex-direction: column; align-items: center; justify-content: center; transition: var(--transition); }
+            .nav-links.active { left: 0; } .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav>
+        <a href="index.html" class="logo"><img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'"></a>
+        <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <h1>Privacy Policy & Terms</h1>
+        <p style="color:var(--text-muted);">Effective Date: January 1, 2026</p>
+    </header>
+
+    <div class="container">
+        <div class="content-box">
+            <h2>1. Information We Collect</h2>
+            <p>At FENIX Studio, we prioritize your privacy. We collect information that you voluntarily provide to us when you express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
+            <ul>
+                <li>Personal Information: Name, email address, phone number.</li>
+                <li>Project Data: Design requirements, files, and specifications.</li>
+                <li>Automatically Collected Data: IP address, browser type, and usage metrics via cookies.</li>
+            </ul>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>We process your personal information for a variety of reasons, depending on how you interact with our Services, including:</p>
+            <ul>
+                <li>To facilitate account creation and authentication.</li>
+                <li>To deliver and facilitate delivery of services to the user.</li>
+                <li>To respond to user inquiries/offer support to users.</li>
+                <li>To send administrative information to you.</li>
+            </ul>
+
+            <h2>3. Cookie Policy</h2>
+            <p>We may use cookies and similar tracking technologies (like web beacons and pixels) to access or store information. Specific information about how we use such technologies and how you can refuse certain cookies is set out in our Cookie Policy.</p>
+
+            <h2>4. Data Security</h2>
+            <p>We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet can be guaranteed to be 100% secure.</p>
+
+            <h2>5. User Rights</h2>
+            <p>Depending on your location, you may have the right to request access to the personal information we collect from you, change that information, or delete it in some circumstances. To request to review, update, or delete your personal information, please submit a request form by contacting us.</p>
+
+            <h2>6. Contact Us</h2>
+            <p>If you have questions or comments about this notice, you may email us at <strong>privacy@fenixstudio.com</strong> or by post to:</p>
+            <p>FENIX Studio<br>Nadapuram, Calicut<br>Kerala</p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 FENIX Studio. All Rights Reserved.
+    </footer>
+
+    <script>
+        document.querySelector('.menu-toggle').addEventListener('click', () => { document.querySelector('.nav-links').classList.toggle('active'); });
+        const cursorDot = document.querySelector('.cursor-dot'); const cursorOutline = document.querySelector('.cursor-outline');
+        window.addEventListener('mousemove', (e) => { cursorDot.style.left = `${e.clientX}px`; cursorDot.style.top = `${e.clientY}px`; cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" }); });
+    </script>
+</body>
+</html>
