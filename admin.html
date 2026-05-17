@@ -1,301 +1,709 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | FENIX</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FENIX Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="icon" href="favicon.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        :root {
-            --primary: #000000; --accent-gold: #f2d95c; --accent-blue: #41a8e8; --text-main: #ffffff;
-            --text-muted: rgba(255,255,255,0.7); --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1); --transition: all 0.3s ease;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background-color: var(--primary); color: var(--text-main); height: 100vh; overflow: hidden; }
 
-        /* Login Screen */
-        #login-screen {
-            position: absolute; inset: 0; background: var(--primary); z-index: 100;
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
-            background-image: radial-gradient(circle at 50% 50%, rgba(65,168,232,0.1) 0%, transparent 50%);
-        }
-        .login-box {
-            background: var(--glass-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--glass-border);
-            text-align: center; width: 400px; max-width: 90%; backdrop-filter: blur(10px);
-        }
-        .login-box h2 { margin-bottom: 20px; color: var(--accent-gold); }
-        .login-input {
-            width: 100%; padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border);
-            color: #fff; border-radius: 10px; margin-bottom: 20px; font-size: 1.1rem; outline: none; text-align: center;
-            letter-spacing: 2px;
-        }
-        .login-input:focus { border-color: var(--accent-blue); }
-        .btn-login {
-            width: 100%; padding: 15px; background: linear-gradient(45deg, var(--accent-blue), var(--accent-gold));
-            border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition); color: #000;
-        }
-        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(65,168,232,0.3); }
-        .error-msg { color: #ff4757; font-size: 0.9rem; margin-top: 15px; opacity: 0; transition: opacity 0.3s; }
-        .shake { animation: shake 0.5s; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+<style>
 
-        /* Dashboard Layout */
-        #dashboard { display: none; height: 100vh; display: flex; flex-direction: column; }
-        
-        nav {
-            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.02);
-        }
-        .logo img { height: 30px; }
-        .nav-actions { display: flex; gap: 15px; }
-        .btn-action {
-            background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main);
-            padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px;
-        }
-        .btn-action:hover { background: rgba(255,255,255,0.1); }
-        .btn-logout { border-color: #ff4757; color: #ff4757; }
-        .btn-logout:hover { background: #ff4757; color: #fff; }
+:root{
+    --bg:#050505;
+    --card:#111111;
+    --border:rgba(255,255,255,0.08);
+    --gold:#f2d95c;
+    --blue:#41a8e8;
+    --white:#ffffff;
+    --muted:rgba(255,255,255,0.7);
+}
 
-        .dashboard-content { flex: 1; padding: 40px 5%; overflow-y: auto; }
-        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header-row h1 { font-size: 2rem; color: var(--accent-blue); }
-        
-        .search-bar { position: relative; width: 300px; }
-        .search-bar input {
-            width: 100%; padding: 12px 15px 12px 40px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-            color: #fff; border-radius: 30px; outline: none; transition: var(--transition);
-        }
-        .search-bar input:focus { border-color: var(--accent-gold); }
-        .search-bar i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Outfit',sans-serif;
+}
 
-        /* Table */
-        .table-container { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 15px 20px; border-bottom: 1px solid var(--glass-border); white-space: nowrap; }
-        th { color: var(--accent-gold); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
-        tr:hover td { background: rgba(255,255,255,0.02); }
-        td { color: var(--text-muted); font-size: 0.95rem; }
-        .td-msg { max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
-        
-        .btn-del { background: rgba(255, 71, 87, 0.1); border: 1px solid #ff4757; color: #ff4757; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: 0.2s; }
-        .btn-del:hover { background: #ff4757; color: #fff; }
+body{
+    background:var(--bg);
+    color:var(--white);
+    overflow:hidden;
+}
 
-        /* Loader */
-        .data-loader { text-align: center; padding: 50px; color: var(--text-muted); display: none; }
-        .data-loader i { font-size: 2rem; animation: spin 1s linear infinite; margin-bottom: 10px; color: var(--accent-blue); }
-        @keyframes spin { to { transform: rotate(360deg); } }
+/* LOGIN */
 
-        .badge { padding: 4px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; background: rgba(65, 168, 232, 0.2); color: var(--accent-blue); }
+#login-screen{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#000;
+    z-index:100;
+}
 
-        @media (max-width: 768px) {
-            .header-row { flex-direction: column; gap: 20px; align-items: flex-start; }
-            .search-bar { width: 100%; }
-        }
-    </style>
+.login-box{
+    width:400px;
+    max-width:90%;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:45px;
+    text-align:center;
+    backdrop-filter:blur(12px);
+}
+
+.login-box img{
+    height:50px;
+    margin-bottom:25px;
+}
+
+.login-box h2{
+    margin-bottom:25px;
+    color:var(--gold);
+}
+
+.login-input{
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:#0b0b0b;
+    color:white;
+    outline:none;
+    margin-bottom:20px;
+    text-align:center;
+    font-size:16px;
+}
+
+.btn-login{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(45deg,var(--blue),var(--gold));
+    color:#000;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.error-msg{
+    color:#ff4d4d;
+    margin-top:15px;
+    opacity:0;
+}
+
+/* DASHBOARD */
+
+#dashboard{
+    display:none;
+    height:100vh;
+    flex-direction:column;
+}
+
+nav{
+    padding:20px 5%;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:800;
+    color:var(--gold);
+}
+
+.nav-actions{
+    display:flex;
+    gap:15px;
+}
+
+.btn-action{
+    padding:10px 18px;
+    border-radius:30px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.03);
+    color:white;
+    cursor:pointer;
+}
+
+.btn-logout{
+    border-color:#ff4d4d;
+    color:#ff4d4d;
+}
+
+.dashboard-content{
+    padding:40px 5%;
+    overflow:auto;
+    flex:1;
+}
+
+.header-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.search-bar{
+    position:relative;
+    width:300px;
+}
+
+.search-bar input{
+    width:100%;
+    padding:14px 14px 14px 45px;
+    border-radius:40px;
+    border:1px solid var(--border);
+    background:#111;
+    color:white;
+    outline:none;
+}
+
+.search-bar i{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.table-container{
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#0d0d0d;
+    color:var(--gold);
+    padding:18px;
+    text-align:left;
+    font-size:14px;
+}
+
+td{
+    padding:18px;
+    border-top:1px solid var(--border);
+    color:var(--muted);
+}
+
+tr:hover{
+    background:rgba(255,255,255,0.02);
+}
+
+.badge{
+    background:rgba(65,168,232,0.15);
+    color:var(--blue);
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.btn-del{
+    padding:8px 10px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d4d20;
+    color:#ff4d4d;
+    cursor:pointer;
+}
+
+.data-loader{
+    padding:50px;
+    text-align:center;
+    display:none;
+}
+
+@media(max-width:768px){
+
+    .header-row{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+    .search-bar{
+        width:100%;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <!-- Login Screen -->
-    <div id="login-screen">
-        <div class="login-box" id="loginBox">
-            <img src="logo.png" alt="FENIX" height="40" style="margin-bottom:20px" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'">
-            <h2>Secure Access</h2>
-            <input type="password" id="adminPassword" class="login-input" placeholder="Enter Password" autocomplete="off">
-            <button class="btn-login" onclick="verifyLogin()">Access Dashboard</button>
-            <div class="error-msg" id="errorMsg">Incorrect password. Access denied.</div>
+<!-- LOGIN -->
+
+<div id="login-screen">
+
+    <div class="login-box" id="loginBox">
+
+        <img src="logo.png" onerror="this.src='https://placehold.co/160x50/000/fff?text=FENIX'">
+
+        <h2>Admin Login</h2>
+
+        <input 
+            type="password"
+            id="adminPassword"
+            class="login-input"
+            placeholder="Enter Password"
+        >
+
+        <button class="btn-login" onclick="verifyLogin()">
+            Access Dashboard
+        </button>
+
+        <div class="error-msg" id="errorMsg">
+            Wrong Password
         </div>
+
     </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" style="display:none;">
-        <nav>
-            <a href="index.html" class="logo"><img src="logo.png" alt="FENIX" onerror="this.src='https://placehold.co/120x40/000/fff?text=FENIX'"></a>
-            <div class="nav-actions">
-                <button class="btn-action" onclick="fetchOrders()"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
-                <button class="btn-action" onclick="exportCSV()"><i class="ph ph-download-simple"></i> Export</button>
-                <button class="btn-action btn-logout" onclick="logout()"><i class="ph ph-sign-out"></i> Logout</button>
-            </div>
-        </nav>
+</div>
 
-        <div class="dashboard-content">
-            <div class="header-row">
-                <h1>Order Management</h1>
-                <div class="search-bar">
-                    <i class="ph ph-magnifying-glass"></i>
-                    <input type="text" id="searchInput" placeholder="Search orders..." onkeyup="filterTable()">
-                </div>
-            </div>
+<!-- DASHBOARD -->
 
-            <div class="table-container">
-                <div class="data-loader" id="dataLoader"><i class="ph ph-spinner-gap"></i><p>Fetching encrypted data...</p></div>
-                <table id="ordersTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Date</th>
-                            <th>Name</th>
-                            <th>Contact</th>
-                            <th>Service</th>
-                            <th>Message</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Data will be injected here -->
-                    </tbody>
-                </table>
-            </div>
+<div id="dashboard">
+
+    <nav>
+
+        <div class="logo">
+            FENIX
         </div>
+
+        <div class="nav-actions">
+
+            <button class="btn-action" onclick="fetchOrders()">
+                <i class="ph ph-arrows-clockwise"></i>
+                Refresh
+            </button>
+
+            <button class="btn-action" onclick="exportCSV()">
+                <i class="ph ph-download-simple"></i>
+                Export
+            </button>
+
+            <button class="btn-action btn-logout" onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+    <div class="dashboard-content">
+
+        <div class="header-row">
+
+            <h1>Orders Dashboard</h1>
+
+            <div class="search-bar">
+
+                <i class="ph ph-magnifying-glass"></i>
+
+                <input 
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search..."
+                    onkeyup="filterTable()"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="table-container">
+
+            <div class="data-loader" id="dataLoader">
+                Loading Orders...
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Service</th>
+                        <th>Message</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tableBody"></tbody>
+
+            </table>
+
+        </div>
+
     </div>
 
-    <script>
+</div>
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynakvEX4IDeuUW8B1LBZsCYp82GsKjAg8N6EFvKC-ClUmS__SzEI0Aq07P0r6sQxYG/exec";
-        const CORRECT_PASS = "falaq12345";
-        let allOrders = [];
+<script>
 
-        // Check login state
-        if (localStorage.getItem("fenix_admin_auth") === "true") {
-            showDashboard();
+const APPS_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbw_3TzcCA3a1O4nDr_XNc7B3OFnUS7U27deJHIxKG7CshwhqsjwOHk0Oa7aiOv0b8ei/exec";
+
+const CORRECT_PASS = "falaq12345";
+
+let allOrders = [];
+
+// AUTO LOGIN
+
+if(localStorage.getItem("fenix_admin_auth")==="true"){
+    showDashboard();
+}
+
+// LOGIN
+
+function verifyLogin(){
+
+    const pass =
+    document.getElementById("adminPassword").value;
+
+    if(pass === CORRECT_PASS){
+
+        localStorage.setItem(
+            "fenix_admin_auth",
+            "true"
+        );
+
+        showDashboard();
+
+    } else {
+
+        document.getElementById(
+            "errorMsg"
+        ).style.opacity = "1";
+
+    }
+
+}
+
+// ENTER KEY
+
+document.getElementById(
+    "adminPassword"
+).addEventListener("keypress",function(e){
+
+    if(e.key==="Enter"){
+        verifyLogin();
+    }
+
+});
+
+// SHOW DASHBOARD
+
+function showDashboard(){
+
+    document.getElementById(
+        "login-screen"
+    ).style.display = "none";
+
+    document.getElementById(
+        "dashboard"
+    ).style.display = "flex";
+
+    fetchOrders();
+
+}
+
+// LOGOUT
+
+function logout(){
+
+    localStorage.removeItem(
+        "fenix_admin_auth"
+    );
+
+    location.reload();
+
+}
+
+// FETCH ORDERS
+
+async function fetchOrders(){
+
+    const loader =
+    document.getElementById("dataLoader");
+
+    const tbody =
+    document.getElementById("tableBody");
+
+    loader.style.display = "block";
+
+    tbody.innerHTML = "";
+
+    try{
+
+        const response = await fetch(
+            `${APPS_SCRIPT_URL}?action=get`
+        );
+
+        const result = await response.json();
+
+        if(result.success){
+
+            allOrders = result.data;
+
+            renderTable(allOrders);
+
+        } else {
+
+            tbody.innerHTML =
+            `<tr>
+                <td colspan="7">
+                    Failed to load data
+                </td>
+            </tr>`;
+
         }
 
-        function verifyLogin() {
-            const input = document.getElementById("adminPassword").value;
-            const box = document.getElementById("loginBox");
-            const err = document.getElementById("errorMsg");
+    } catch(error){
 
-            if (input === CORRECT_PASS) {
-                localStorage.setItem("fenix_admin_auth", "true");
-                showDashboard();
-            } else {
-                err.style.opacity = "1";
-                box.classList.add("shake");
-                setTimeout(() => box.classList.remove("shake"), 500);
+        console.log(error);
+
+        tbody.innerHTML =
+        `<tr>
+            <td colspan="7">
+                Network Error
+            </td>
+        </tr>`;
+
+    } finally {
+
+        loader.style.display = "none";
+
+    }
+
+}
+
+// RENDER TABLE
+
+function renderTable(data){
+
+    const tbody =
+    document.getElementById("tableBody");
+
+    tbody.innerHTML = "";
+
+    if(data.length===0){
+
+        tbody.innerHTML =
+        `<tr>
+            <td colspan="7">
+                No Orders Found
+            </td>
+        </tr>`;
+
+        return;
+    }
+
+    data.forEach(order=>{
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+
+        <td style="color:white;font-weight:700;">
+            ${order.ID || "-"}
+        </td>
+
+        <td>
+            ${order.Date || "-"}
+        </td>
+
+        <td>
+            ${order.Name || "-"}
+        </td>
+
+        <td>
+            ${order.Email || "-"}<br>
+            <small>${order.Phone || "-"}</small>
+        </td>
+
+        <td>
+            <span class="badge">
+                ${order.Service || "-"}
+            </span>
+        </td>
+
+        <td>
+            ${order.Message || "-"}
+        </td>
+
+        <td>
+
+            <button
+                class="btn-del"
+                onclick="deleteOrder('${order.ID}')"
+            >
+                <i class="ph ph-trash"></i>
+            </button>
+
+        </td>
+        `;
+
+        tbody.appendChild(row);
+
+    });
+
+}
+
+// SEARCH
+
+function filterTable(){
+
+    const value =
+    document.getElementById(
+        "searchInput"
+    ).value.toLowerCase();
+
+    const filtered = allOrders.filter(order => {
+
+        return (
+
+            order.Name?.toLowerCase().includes(value) ||
+
+            order.Email?.toLowerCase().includes(value) ||
+
+            order.Service?.toLowerCase().includes(value) ||
+
+            order.ID?.toLowerCase().includes(value)
+
+        );
+
+    });
+
+    renderTable(filtered);
+
+}
+
+// DELETE ORDER
+
+async function deleteOrder(id){
+
+    const confirmDelete =
+    confirm(`Delete ${id}?`);
+
+    if(!confirmDelete) return;
+
+    try{
+
+        const response = await fetch(
+            APPS_SCRIPT_URL,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "text/plain;charset=utf-8"
+                },
+
+                body:JSON.stringify({
+                    action:"delete",
+                    id:id
+                })
             }
-        }
+        );
 
-        document.getElementById("adminPassword").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") verifyLogin();
-        });
+        const result = await response.json();
 
-        function showDashboard() {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("dashboard").style.display = "flex";
+        if(result.success){
+
+            alert("Deleted Successfully");
+
             fetchOrders();
-        }
 
-        function logout() {
-            localStorage.removeItem("fenix_admin_auth");
-            document.getElementById("login-screen").style.display = "flex";
-            document.getElementById("dashboard").style.display = "none";
-            document.getElementById("adminPassword").value = "";
-            document.getElementById("errorMsg").style.opacity = "0";
-        }
+        } else {
 
-        async function fetchOrders() {
-            if(APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_WEBAPP_URL") {
-                document.getElementById('tableBody').innerHTML = "<tr><td colspan='7' style='text-align:center;color:#ff4757;'>Please set your APPS_SCRIPT_URL in the code.</td></tr>";
-                return;
-            }
-
-            const loader = document.getElementById("dataLoader");
-            const tbody = document.getElementById("tableBody");
-            
-            loader.style.display = "block";
-            tbody.innerHTML = "";
-
-            try {
-                const res = await fetch(`${APPS_SCRIPT_URL}?action=get`);
-                const result = await res.json();
-
-                if (result.success) {
-                    allOrders = result.data;
-                    renderTable(allOrders);
-                } else {
-                    tbody.innerHTML = `<tr><td colspan='7' style='text-align:center;'>Error loading data.</td></tr>`;
-                }
-            } catch (err) {
-                tbody.innerHTML = `<tr><td colspan='7' style='text-align:center;'>Network error.</td></tr>`;
-            } finally {
-                loader.style.display = "none";
-            }
-        }
-
-        function renderTable(data) {
-            const tbody = document.getElementById("tableBody");
-            tbody.innerHTML = "";
-
-            if (data.length === 0) {
-                tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No orders found.</td></tr>";
-                return;
-            }
-
-            data.forEach(order => {
-                const date = new Date(order.Date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="color:var(--text-main); font-weight:bold;">${order.ID || '-'}</td>
-                    <td>${date !== 'Invalid Date' ? date : order.Date}</td>
-                    <td>${order.Name || '-'}</td>
-                    <td>${order.Email || '-'}<br><small>${order.Phone || '-'}</small></td>
-                    <td><span class="badge">${order.Service || '-'}</span></td>
-                    <td class="td-msg" title="${order.Message || ''}">${order.Message || '-'}</td>
-                    <td><button class="btn-del" onclick="deleteOrder('${order.ID}')"><i class="ph ph-trash"></i></button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filterTable() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allOrders.filter(o => 
-                (o.Name && o.Name.toLowerCase().includes(term)) || 
-                (o.Email && o.Email.toLowerCase().includes(term)) ||
-                (o.ID && o.ID.toLowerCase().includes(term)) ||
-                (o.Service && o.Service.toLowerCase().includes(term))
+            alert(
+                result.error || "Delete Failed"
             );
-            renderTable(filtered);
+
         }
 
-        async function deleteOrder(id) {
-            if (!confirm(`Are you sure you want to delete order ${id}?`)) return;
+    } catch(error){
 
-            try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'delete', id: id })
-                });
-                const result = await res.json();
-                if (result.success) {
-                    fetchOrders(); // refresh
-                } else {
-                    alert("Failed to delete order.");
-                }
-            } catch (e) {
-                alert("Network error.");
-            }
-        }
+        console.log(error);
 
-        function exportCSV() {
-            if (allOrders.length === 0) return alert("No data to export.");
-            
-            const headers = Object.keys(allOrders[0]).join(",");
-            const rows = allOrders.map(o => {
-                return Object.values(o).map(val => `"${String(val).replace(/"/g, '""')}"`).join(",");
-            });
-            
-            const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + rows.join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `fenix_orders_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
+        alert("Network Error");
+
+    }
+
+}
+
+// EXPORT CSV
+
+function exportCSV(){
+
+    if(allOrders.length===0){
+
+        alert("No Data");
+
+        return;
+    }
+
+    const headers =
+    Object.keys(allOrders[0]).join(",");
+
+    const rows = allOrders.map(order => {
+
+        return Object.values(order)
+        .map(value =>
+            `"${String(value).replace(/"/g,'""')}"`
+        )
+        .join(",");
+
+    });
+
+    const csv =
+    headers + "\n" + rows.join("\n");
+
+    const blob = new Blob(
+        [csv],
+        {type:"text/csv"}
+    );
+
+    const url =
+    URL.createObjectURL(blob);
+
+    const a =
+    document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+    "fenix_orders.csv";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+}
+
+</script>
+
 </body>
 </html>
